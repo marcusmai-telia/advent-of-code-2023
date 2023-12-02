@@ -1,10 +1,10 @@
 let fs = require('fs');
-const input = fs.readFileSync('./day01/input.txt', 'utf-8').split(/\r?\n/);
+const lines = fs.readFileSync('./day01/input.txt', 'utf-8').split(/\r?\n/);
 
 let value = 0;
 let inputNumbers = [];
 
-input.forEach((element) => {
+lines.forEach((element) => {
 	let numbers = [];
 	
 	// console.log(element);

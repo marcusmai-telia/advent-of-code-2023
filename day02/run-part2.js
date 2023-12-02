@@ -1,68 +1,74 @@
+const { log } = require('console');
 let fs = require('fs');
-const input = fs.readFileSync('./day01/input.txt', 'utf-8').split(/\r?\n/);
+const line = fs.readFileSync('./day02/input.txt', 'utf-8').split(/\r?\n/);
 
 let value = 0;
-let inputNumbers = [];
+let powerSum = 0;
+const maxRed = 13; // 12 + 1
+const maxGreen = 14; // 13 +1
+const maxBlue = 15; // 14 + 1
 
-input.forEach((element) => {
-	let numbers = [];
+// Check every game (line)
+line.forEach((element) => {
+	console.log('Input: ' + element);
+
+	let minRed = 0;
+	let minGreen = 0;
+	let minBlue = 0;
+
+	gamePossible = true;
+
+	const game = element.split(':');
+	const gameNumber = game[0].slice(5, game[0].length);
+
+	let gameSets = [];
+
+	//split up game in sets
+	const sets = game[1].split(';');
 	
-	// console.log(element);
+	//split up sets in set
+	sets.forEach(element => {
+		let gameSet = [];
+		const set = element.split(',');
 
-	//Loops through the line and adds numbers or named numbers
-	for (let index = 0; index < element.length; index++) {
-		const e = element[index];
-		
-		if (isNaN(e) === false) {
-			numbers.push(e);
-		}
-		else { // zero, one, two, three, four, five, six, seven, eight, nine
-			if (element.slice(index, index + 4) === 'zero') {
-				numbers.push('0');
+		set.forEach(element => { 
+			const set = element.trimStart().split(' ')
+			gameSet.push(set);
+			
+			if (set[1] === 'red' && parseInt(set[0]) >= maxRed || set[1] === 'green' && parseInt(set[0]) >= maxGreen || set[1] === 'blue' && parseInt(set[0]) >= maxBlue) {
+				gamePossible = false;
 			}
-			if (element.slice(index, index + 3) === 'one') {
-				numbers.push('1');
+			//count min per color
+			if (set[1] === 'red' && parseInt(set[0]) > minRed) {
+				// console.log('Current minRed: ' + minRed);
+				// console.log('Current Value: ' + set[0]);
+				minRed = set[0];
+				// console.log('New minRed: ' + minRed);
 			}
-			if (element.slice(index, index + 3) === 'two') {
-				numbers.push('2');
+			if (set[1] === 'green' && parseInt(set[0]) > minGreen) {
+				minGreen = set[0];
 			}
-			if (element.slice(index, index + 5) === 'three') {
-				numbers.push('3');
+			if (set[1] === 'blue' && parseInt(set[0]) > minBlue) {
+				minBlue = set[0];
 			}
-			if (element.slice(index, index + 4) === 'four') {
-				numbers.push('4');
-			}
-			if (element.slice(index, index + 4) === 'five') {
-				numbers.push('5');
-			}
-			if (element.slice(index, index + 3) === 'six') {
-				numbers.push('6');
-			}
-			if (element.slice(index, index + 5) === 'seven') {
-				numbers.push('7');
-			}
-			if (element.slice(index, index + 5) === 'eight') {
-				numbers.push('8');
-			}
-			if (element.slice(index, index + 4) === 'nine') {
-				numbers.push('9');
-			}
-		}
-		
+
+		});
+		gameSets.push(gameSet);
+	});
+
+	
+	if (gamePossible) {
+		value = value + parseInt(gameNumber);
 	}
-	// console.log(numbers);
-	if (numbers.length > 1) {
-		const currentNumber = numbers[0] + numbers[numbers.length - 1];
-		inputNumbers.push(numbers[0] + numbers[numbers.length - 1]);
-		value = value + +currentNumber;
-	}
-	else {
-		const currentNumber = numbers[0] + numbers[0];
-		inputNumbers.push(numbers[0] + numbers[0]);
-		value = value + +currentNumber;
-	}
+	// sum the powers
+	console.log('Min for the game: Red: ' + minRed + ' Green: ' + minGreen + ' Blue: ' + minBlue);
+	console.log('Power: ' + (minRed * minGreen * minBlue));
+	powerSum = powerSum + (minBlue * minGreen * minRed);
+
 });
 
-// console.log('Values: ' + inputNumbers);
 
 console.log('Part 1: ' + value);
+console.log('Part 2: ' + powerSum);
+
+console.log('Max: Red: ' + maxRed + ' Green: ' + maxGreen + ' Blue: ' + maxBlue);

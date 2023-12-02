@@ -1,36 +1,62 @@
+const { log } = require('console');
 let fs = require('fs');
-const input = fs.readFileSync('./day01/input.txt', 'utf-8').split(/\r?\n/);
+const line = fs.readFileSync('./day02/input.txt', 'utf-8').split(/\r?\n/);
 
 let value = 0;
-let inputNumbers = [];
+const maxRed = 13; // 12 + 1
+const maxGreen = 14; // 13 +1
+const maxBlue = 15; // 14 + 1
 
-input.forEach((element) => {
-	let numbers = [];
+// Check every game (line)
+line.forEach((element) => {
+	console.log('Input: ' + element);
+
+	gamePossible = true;
+
+	const game = element.split(':');
+	const gameNumber = game[0].slice(5, game[0].length);
+
+	let gameSets = [];
+
+	//split up game in sets
+	const sets = game[1].split(';');
 	
-	//console.log(element);
+	//split up sets in set
+	sets.forEach(element => {
+		let gameSet = [];
+		const set = element.split(',');
 
-	//Save only numbers
-	for (let index = 0; index < element.length; index++) {
-		const e = element[index];
-		//Save value if it's a number
-		if (isNaN(e) === false) {
-			numbers.push(e);
-		}
-		
+		set.forEach(element => { 
+			const set = element.trimStart().split(' ')
+			gameSet.push(set);
+			
+			// console.log(set);
+
+			if (set[1] === 'red' && parseInt(set[0]) >= maxRed || set[1] === 'green' && parseInt(set[0]) >= maxGreen || set[1] === 'blue' && parseInt(set[0]) >= maxBlue) {
+				
+				console.log('Value:' + set[0]);
+				console.log('Color:' + set[1]);
+				console.log('Evaluate: ' + set[1] === 'green' && parseInt(set[0]) >= maxGreen);
+				console.log('<----------------  Its above the max value');
+				gamePossible = false;
+			}
+
+
+
+		});
+		gameSets.push(gameSet);
+	});
+
+	//console.log(gameSets);
+
+	console.log('====>  Game: ' + gameNumber + ' possible: ' + gamePossible);
+	
+	if (gamePossible) {
+		value = value + parseInt(gameNumber);
 	}
-	//console.log(numbers);
-	if (numbers.length > 1) {
-		const currentNumber = numbers[0] + numbers[numbers.length - 1];
-		inputNumbers.push(numbers[0] + numbers[numbers.length - 1]);
-		value = value + +currentNumber;
-	}
-	else {
-		const currentNumber = numbers[0] + numbers[0];
-		inputNumbers.push(numbers[0] + numbers[0]);
-		value = value + +currentNumber;
-	}
+
 });
 
-// console.log('Values: ' + inputNumbers);
 
 console.log('Part 1: ' + value);
+console.log('Max: Red: ' + maxRed + ' Green: ' + maxGreen + ' Blue: ' + maxBlue);

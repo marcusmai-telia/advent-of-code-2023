@@ -186,9 +186,3 @@ for (let i = 0; i < starNumbers.length; i++) {
 
 
 console.log('Part 1: ' + sumStars);
-
-
-
-
-/// Two errors.... i'm not looking for more then one star per number, could be OK.
-// I don't add mulit togehter??
